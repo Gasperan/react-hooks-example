@@ -1,31 +1,45 @@
-import React, {useState, useEffect} from 'react'
+import React from 'react'
 import Card from './Card'
 
-function App() {
-  const [value, setValue] = useState('')
-  const [width, setWidth] = useState(window.innerWidth)
-
-  const handleOnchange = event => {
-    setValue(event.target.value)
+class App extends React.Component {
+  state = {
+    value : '',
+    width :window.innerWidth 
   }
 
-  useEffect(()=> {
-    const handleResize = () => setWidth(window.innerWidth)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  })
+  handleResize = () => {
+    this.setState({
+      width: window.innerWidth
+    })
+  }
 
-  return (
-    <Card>
-      <span>
-        Width: {width}
+  componentWillMount() {
+    window.addEventListener('resize', this.handleResize)
+  }
+
+  componentDidMount() {
+    window.removeEventListener('resize', this.handleResize)
+  }
+
+  handleOnchange = (event) => {
+    this.setState({
+      value: event.target.value
+    })
+  }
+
+  render() {
+    return (
+      <Card>
+       <span>
+        Width: {this.state.width}
       </span>
       <input
-        value={value}
-        onChange={handleOnchange}
-      />  
+        value={this.state.value}
+        onChange={this.handleOnchange}
+      />
     </Card>
-  )
+    )
+  }
 }
 
 export default App;
